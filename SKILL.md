@@ -1,3 +1,8 @@
+---
+name: pixel-sprite-ai
+description: Guidelines on how to effectively use the PixelSpriteAI python library to generate pixel art. Activate this skill when tasked with generating pixel art or using the PixelSpriteAI tools.
+---
+
 # Guidelines for LLM Agents using PixelSpriteAI
 
 This document provides system guidelines on how to effectively use the `PixelSpriteAI` library. If you are an AI model tasked with generating pixel art using this tool, follow these rules:
