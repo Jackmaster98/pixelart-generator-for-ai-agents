@@ -8,7 +8,7 @@ class SpriteCanvas:
         self.image = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
         self.draw = ImageDraw.Draw(self.image)
 
-    def _parse_color(self, color: str) -> tuple[tuple, str]:
+    def _parse_color(self, color: str) -> tuple:
         """Converts strings to RGBA tuple. Returns (color_tuple, warning_message)."""
         try:
             rgba = ImageColor.getcolor(color, "RGBA")
