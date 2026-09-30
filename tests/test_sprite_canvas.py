@@ -1,5 +1,4 @@
 import os
-import pytest
 from PIL import Image
 from pixelspriteai import SpriteCanvas
 
@@ -34,6 +33,30 @@ def test_draw_pixel_invalid_color():
     assert "Warning" in res
     assert "invalid" in res
     assert canvas.image.getpixel((5, 5)) == (255, 0, 255, 255) # fallback magenta
+
+def test_draw_pixel_non_string_color():
+    canvas = SpriteCanvas(16, 16)
+    res = canvas.draw_pixel(5, 5, (255, 0, 0, 255))
+    assert "Warning" in res
+    assert canvas.image.getpixel((5, 5)) == (255, 0, 255, 255) # fallback magenta
+
+def test_invalid_scale_factor():
+    for bad in (0, -3):
+        try:
+            SpriteCanvas(16, 16, scale_factor=bad)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"scale_factor={bad} should raise ValueError")
+
+    # Float scale factors are rejected: Image.resize only accepts integers,
+    # so allowing 2.5 here would make export() crash later.
+    try:
+        SpriteCanvas(16, 16, scale_factor=2.5)
+    except ValueError as exc:
+        assert "integer" in str(exc)
+    else:
+        raise AssertionError("scale_factor=2.5 should raise ValueError")
 
 def test_draw_line():
     canvas = SpriteCanvas(16, 16)
@@ -84,8 +107,8 @@ def test_export():
 
     assert os.path.exists(filename)
 
-    exported_img = Image.open(filename)
-    assert exported_img.size == (32, 32)
-    assert exported_img.mode == "RGBA"
+    with Image.open(filename) as exported_img:
+        assert exported_img.size == (32, 32)
+        assert exported_img.mode == "RGBA"
 
     os.remove(filename)
